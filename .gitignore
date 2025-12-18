@@ -1,2 +1,5 @@
 app*
 nlohmann/
+build/
+data*
+other

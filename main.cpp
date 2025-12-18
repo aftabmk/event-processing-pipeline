@@ -3,8 +3,8 @@
 #include "FilterClass/FilterClass.hpp"
 
 int main() {
-    std::string jsonStr1 = R"({"EXCHANGE": "BSE", "TYPE": "FUTURE"})",
-                jsonStr2 = R"({"EXCHANGE": "BSE", "TYPE": "EQUITY"})";
+    std::string jsonStr1 = R"({"exchange": "BSE", "type": "FUTURE", "data" : []})",
+                jsonStr2 = R"({"exchange": "BSE", "type": "EQUITY", "data" : []})";
 
     FilterClass f1(jsonStr1), f2(jsonStr2);
 

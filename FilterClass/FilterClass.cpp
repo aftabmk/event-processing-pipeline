@@ -6,17 +6,18 @@
 using json = nlohmann::json;
 
 FilterClass::FilterClass(const std::string& jsonStr) {
-    auto [exchange, type] = parseJsonSafe(jsonStr);
+    auto [exchange, type] = parseJson(jsonStr);
     exchangeEnum = exchange, typeEnum = type;
 }
 
-std::pair<Exchange, Type> FilterClass::parseJsonSafe(const std::string& jsonStr) {
+std::pair<Exchange, Type> FilterClass::parseJson(const std::string& jsonStr) {
     try {
-        json j = json::parse(jsonStr);
+        json Json = json::parse(jsonStr);
 
+        const std::string exchange = Json.value("exchange",""), value = Json.value("type","");
         return {
-            ExchangeType::toExchange(j.value("EXCHANGE", "")),
-            ExchangeType::toType(j.value("TYPE", ""))
+            ExchangeType::toExchange(exchange),
+            ExchangeType::toType(value)
         };
     }
     catch (...) {
@@ -24,11 +25,10 @@ std::pair<Exchange, Type> FilterClass::parseJsonSafe(const std::string& jsonStr)
     }
 }
 
-bool FilterClass::match(Exchange ex, Type ty) const {
-    return exchangeEnum == ex && typeEnum == ty;
+bool FilterClass::match(Exchange exchange, Type type) const {
+    return exchangeEnum == exchange && typeEnum == type;
 }
 
-std::unique_ptr<Instrument>
-FilterClass::getInstrument() const {
+std::unique_ptr<Instrument> FilterClass::getInstrument() const {
     return InstrumentFactory::create(exchangeEnum, typeEnum);
 }

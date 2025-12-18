@@ -4,6 +4,6 @@
 
 class ExchangeType {
 public:
+    static Type toType(const std::string& s);
     static Exchange toExchange(const std::string& s);
-    static Type     toType(const std::string& s);
 };
