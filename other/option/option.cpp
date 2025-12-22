@@ -1,120 +1,169 @@
 #include "option.hpp"
 
-// ---------- Common NSE side processing ----------
+// ---------- NSE side ----------
 json Option::processNSE(const json& side) {
-    json Json;
-    Json["ltp"] = side.value("lastPrice", 0.0);
-    Json["bp"]  = side.value("buyPrice1", 0.0);
-    Json["sp"]  = side.value("sellPrice1", 0.0);
-    Json["oi"]  = side.value("openInterest", 0);
-    Json["bq"]  = side.value("buyQuantity1", 0);
-    Json["sq"]  = side.value("sellQuantity1", 0);
-    Json["tbq"] = side.value("totalBuyQuantity", 0);
-    Json["tsq"] = side.value("totalSellQuantity", 0);
-    Json["vol"] = side.value("totalTradedVolume", 0);
-    Json["iv"]  = side.value("impliedVolatility", 0.0);
-    return Json;
+    json j;
+    j["ltp"] = side.value("lastPrice", 0.0);
+    j["bp"]  = side.value("buyPrice1", 0.0);
+    j["sp"]  = side.value("sellPrice1", 0.0);
+    j["oi"]  = side.value("openInterest", 0);
+    j["bq"]  = side.value("buyQuantity1", 0);
+    j["sq"]  = side.value("sellQuantity1", 0);
+    j["tbq"] = side.value("totalBuyQuantity", 0);
+    j["tsq"] = side.value("totalSellQuantity", 0);
+    j["vol"] = side.value("totalTradedVolume", 0);
+    j["iv"]  = std::round(side.value("impliedVolatility", 0.0) * 100.0) / 100.0;
+    return j;
+}
+
+// ---------- BSE side ----------
+json Option::processBSE(const json& side, bool isCE) {
+    json j;
+    const std::string p = isCE ? "C_" : "";
+
+    j["ltp"] = toDouble(side, (p + "Last_Trd_Price").c_str());
+    j["bp"]  = toDouble(side, (p + "BidPrice").c_str());
+    j["sp"]  = toDouble(side, (p + "OfferPrice").c_str());
+    j["oi"]  = toInt   (side, (p + "Open_Interest").c_str());
+    j["bq"]  = toInt   (side, (p + "BIdQty").c_str());
+    j["sq"]  = toInt   (side, (p + "OfferQty").c_str());
+    j["tbq"] = toInt   (side, (p + "BIdQty").c_str());
+    j["tsq"] = toInt   (side, (p + "OfferQty").c_str());
+    j["vol"] = toInt   (side, (p + "Vol_Traded").c_str());
+    j["iv"]  = std::round(toDouble(side, (p + "IV").c_str()) * 100.0) / 100.0;
+
+    return j;
+}
+
+// ---------- Common option builder ----------
+json Option::buildOption(
+    int strike,
+    double underlyingValue,
+    const std::string& timestamp,
+    const std::string& underlying,
+    const std::string& expiry,
+    const json& ce,
+    const json& pe
+) {
+    json option;
+    option["ts"]  = timestamp;
+    option["ul"]  = underlying;
+    option["ulv"] = underlyingValue;
+    option["exp"] = expiry;
+    option["str"] = strike;
+    option["key"] = std::to_string(strike) + " | " + expiry;
+    option["ce"]  = ce;
+    option["pe"]  = pe;
+    return option;
 }
 
 // ---------- Strike bounds ----------
-std::pair<int, int>
-Option::calculateBound(double underlyingValue, int multiplier, int count) {
-    const int base = static_cast<int>(underlyingValue);
+std::pair<int, int> Option::calculateBound(double underlyingValue, int multiplier, int count) {
+    int base = static_cast<int>(underlyingValue);
     return { base - multiplier * count, base + multiplier * count };
 }
 
-// ---------- NSE Option Chain ----------
+// ---------- Safe parsers ----------
+double Option::toDouble(const json& j, const char* key) {
+    if (!j.contains(key))
+        return 0.0;
+
+    std::string s = j.value(key, "");
+    if (s.empty())
+        return 0.0;
+
+    std::string clean;
+    for (char c : s)
+        if (c != ',')
+            clean += c;
+
+    return std::stod(clean);
+}
+
+int Option::toInt(const json& j, const char* key) {
+    return static_cast<int>(toDouble(j, key));
+}
+
+// ---------- NSE option chain ----------
 json Option::processOptionNSE(const json& jsonData) {
     json result = json::array();
 
     if (!jsonData.contains("data") || !jsonData["data"].is_array())
         return result;
 
-    const std::string timestamp = jsonData.value("time", "");
+    const std::string ts = jsonData.value("time", "");
 
     for (const auto& block : jsonData["data"]) {
 
-        if (!block.contains("records") || !block["records"].is_object())
-            continue;
-
+        if (!block.contains("records")) continue;
         const auto& records = block["records"];
-        if (!records.contains("data") || !records["data"].is_array())
-            continue;
 
-        const double underlyingValue = records.value("underlyingValue", 0.0);
-        auto [lowerLimit, upperLimit] =
-            calculateBound(underlyingValue, 50, 10);
+        if (!records.contains("data")) continue;
 
-        for (const auto& val : records["data"]) {
+        double ulv = records.value("underlyingValue", 0.0);
+        auto [low, high] = calculateBound(ulv, 50, 10);
 
-            const int strike = val.value("strikePrice", 0);
-            if (strike < lowerLimit || strike > upperLimit)
+        for (const auto& row : records["data"]) {
+            int strike = row.value("strikePrice", 0);
+            if (strike < low || strike > high)
                 continue;
 
-            json option;
-
-            const json ce = processNSE(val.value("CE", json::object()));
-            const json pe = processNSE(val.value("PE", json::object()));
-
-            const std::string expiry = val.value("expiryDates", "");
-
-            option["ts"]  = timestamp;
-            option["ul"]  = val.value("CE", json::object())
-                                .value("underlying", "");
-            option["ulv"] = underlyingValue;
-            option["exp"] = expiry;
-            option["str"] = strike;
-            option["key"] = std::to_string(strike) + " | " + expiry;
-            option["ce"]  = ce;
-            option["pe"]  = pe;
-
-            result.push_back(option);
+            result.push_back(
+                buildOption(
+                    strike,
+                    ulv,
+                    ts,
+                    row.value("CE", json::object()).value("underlying", ""),
+                    row.value("expiryDates", ""),
+                    processNSE(row.value("CE", json::object())),
+                    processNSE(row.value("PE", json::object()))
+                )
+            );
         }
     }
 
     return result;
 }
 
-// ---------- BSE Option Chain ----------
+// ---------- BSE option chain ----------
 json Option::processOptionBSE(const json& jsonData) {
     json result = json::array();
 
     if (!jsonData.contains("data") || !jsonData["data"].is_array())
         return result;
 
-    const std::string timestamp = jsonData.value("time", "");
+    const std::string ts = jsonData.value("time", "");
 
     for (const auto& block : jsonData["data"]) {
 
-        if (!block.contains("records"))
-            continue;
+        if (!block.contains("Table")) continue;
+        const auto& table = block["Table"];
 
-        const auto& records = block["records"];
-        if (!records.contains("data") || !records["data"].is_array())
-            continue;
+        double ulv = 0.0;
+        for (const auto& r : table) {
+            ulv = toDouble(r, "UlaValue");
+            if (ulv > 0) break;
+        }
+        if (ulv == 0) continue;
 
-        const double underlyingValue =
-            records.value("underlyingValue", 0.0);
+        auto [low, high] = calculateBound(ulv, 100, 10);
 
-        for (const auto& val : records["data"]) {
+        for (const auto& row : table) {
+            int strike = toInt(row, "Strike_Price");
+            if (strike < low || strike > high)
+                continue;
 
-            const int strike = val.value("strikePrice", 0);
-            json option;
-
-            const json ce = processNSE(val.value("CE", json::object()));
-            const json pe = processNSE(val.value("PE", json::object()));
-
-            const std::string expiry = val.value("expiryDates", "");
-
-            option["ts"]  = timestamp;
-            option["ulv"] = underlyingValue;
-            option["exp"] = expiry;
-            option["str"] = strike;
-            option["key"] = std::to_string(strike) + " | " + expiry;
-            option["ce"]  = ce;
-            option["pe"]  = pe;
-
-            result.push_back(option);
+            result.push_back(
+                buildOption(
+                    strike,
+                    ulv,
+                    ts,
+                    row.value("Ula_Code", ""),
+                    row.value("End_TimeStamp", ""),
+                    processBSE(row, true),
+                    processBSE(row, false)
+                )
+            );
         }
     }
 

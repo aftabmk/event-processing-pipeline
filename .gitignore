@@ -3,3 +3,4 @@ nlohmann/
 build/
 data*
 other/data
+other/result
