@@ -1,8 +1,8 @@
 #pragma once
 
 enum class Exchange {
-    NSE,
-    BSE,
+    EXCHANGE_1,
+    EXCHANGE_2,
     UNKNOWN
 };
 

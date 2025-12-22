@@ -7,8 +7,8 @@ public:
     explicit Option(Exchange ex) : Instrument(ex) {}
 
     void log() const override {
-        if (exchange == Exchange::NSE) std::cout << "NSE-OPTION\n";
-        else if (exchange == Exchange::BSE) std::cout << "BSE-OPTION\n";
+        if (exchange == Exchange::EXCHANGE_1) std::cout << "EXCHANGE_1\n";
+        else if (exchange == Exchange::EXCHANGE_2) std::cout << "EXCHANGE_2\n";
         else std::cout << "UNKNOWN\n";
     }
 };

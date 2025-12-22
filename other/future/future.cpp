@@ -1,6 +1,6 @@
 #include "future.hpp"
 
-json Future::processFutureNSE(const json& jsonData) {
+json Future::processFutureExchangeOne(const json& jsonData) {
     json result;
 
     const std::string timeStr = jsonData.value("time", "");
@@ -28,7 +28,7 @@ json Future::processFutureNSE(const json& jsonData) {
     return result;
 }
 
-json Future::processFutureBSE(const json& jsonData) {
+json Future::processFutureExchangeTwo(const json& jsonData) {
     json result;
 
     const std::string timeStr = jsonData.value("time", "");

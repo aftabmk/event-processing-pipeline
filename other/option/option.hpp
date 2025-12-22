@@ -10,12 +10,12 @@ using json = nlohmann::json;
 class Option {
 public:
     // ---------- Side processors ----------
-    static json processNSE(const json& side);
-    static json processBSE(const json& side, bool isCE);
+    static json processExchangeOne(const json& side);
+    static json processExchangeTwo(const json& side, bool isCE);
 
     // ---------- Option chain ----------
-    static json processOptionNSE(const json& jsonData);
-    static json processOptionBSE(const json& jsonData);
+    static json processOptionExchangeOne(const json& jsonData);
+    static json processOptionExchangeTwo(const json& jsonData);
 
     // ---------- Helpers ----------
     static int    toInt(const json& j, const char* key);

@@ -1,7 +1,7 @@
 #include "option.hpp"
 
-// ---------- NSE side ----------
-json Option::processNSE(const json& side) {
+// ---------- ExchangeOne side ----------
+json Option::processExchangeOne(const json& side) {
     json j;
     j["ltp"] = side.value("lastPrice", 0.0);
     j["bp"]  = side.value("buyPrice1", 0.0);
@@ -16,8 +16,8 @@ json Option::processNSE(const json& side) {
     return j;
 }
 
-// ---------- BSE side ----------
-json Option::processBSE(const json& side, bool isCE) {
+// ---------- ExchangeTwo side ----------
+json Option::processExchangeTwo(const json& side, bool isCE) {
     json j;
     const std::string p = isCE ? "C_" : "";
 
@@ -84,8 +84,8 @@ int Option::toInt(const json& j, const char* key) {
     return static_cast<int>(toDouble(j, key));
 }
 
-// ---------- NSE option chain ----------
-json Option::processOptionNSE(const json& jsonData) {
+// ---------- ExchangeOne option chain ----------
+json Option::processOptionExchangeOne(const json& jsonData) {
     json result = json::array();
 
     if (!jsonData.contains("data") || !jsonData["data"].is_array())
@@ -115,8 +115,8 @@ json Option::processOptionNSE(const json& jsonData) {
                     ts,
                     row.value("CE", json::object()).value("underlying", ""),
                     row.value("expiryDates", ""),
-                    processNSE(row.value("CE", json::object())),
-                    processNSE(row.value("PE", json::object()))
+                    processExchangeOne(row.value("CE", json::object())),
+                    processExchangeOne(row.value("PE", json::object()))
                 )
             );
         }
@@ -125,8 +125,8 @@ json Option::processOptionNSE(const json& jsonData) {
     return result;
 }
 
-// ---------- BSE option chain ----------
-json Option::processOptionBSE(const json& jsonData) {
+// ---------- ExchangeTwo option chain ----------
+json Option::processOptionExchangeTwo(const json& jsonData) {
     json result = json::array();
 
     if (!jsonData.contains("data") || !jsonData["data"].is_array())
@@ -160,8 +160,8 @@ json Option::processOptionBSE(const json& jsonData) {
                     ts,
                     row.value("Ula_Code", ""),
                     row.value("End_TimeStamp", ""),
-                    processBSE(row, true),
-                    processBSE(row, false)
+                    processExchangeTwo(row, true),
+                    processExchangeTwo(row, false)
                 )
             );
         }

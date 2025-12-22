@@ -52,10 +52,10 @@ void run_job(const Job& job) {
 int main() {
     try {
         std::vector<Job> jobs = {
-            {"data/nse_future.json",  "result/nse_future.json",  &Future::processFutureNSE},
-            {"data/bse_future.json",  "result/bse_future.json",  &Future::processFutureBSE},
-            {"data/nse_option.json",  "result/nse_option.json",  &Option::processOptionNSE},
-            {"data/bse_option.json",  "result/bse_option.json",  &Option::processOptionBSE},
+            {"data/exchange_1_future.json",  "result/exchange_1_future.json",  &Future::processFutureExchangeOne},
+            {"data/exchange_2_future.json",  "result/exchange_2_future.json",  &Future::processFutureExchangeTwo},
+            {"data/exchange_1_option.json",  "result/exchange_1_option.json",  &Option::processOptionExchangeOne},
+            {"data/exchange_2_option.json",  "result/exchange_2_option.json",  &Option::processOptionExchangeTwo},
         };
 
         std::vector<std::future<void>> futures;
