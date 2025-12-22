@@ -1,4 +1,3 @@
-#include <iostream>
 #include "Instrument/Instrument.hpp"
 #include "FilterClass/FilterClass.hpp"
 
