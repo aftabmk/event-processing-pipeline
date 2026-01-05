@@ -30,7 +30,7 @@ int main() {
                 if (!msg.is_object())
                     continue;
 
-                // 1. Pass the whole object to the Filter (let Filter handle the string conversion if it must)
+                // 1. Pass the whole object to the Filter
                 std::string input = msg.dump();
                 // filter require string unput instead of json object
                 FilterClass filter(input);
