@@ -18,6 +18,7 @@ add_executable(main
     instrument/equity/equity.cpp
     instrument/future/future.cpp
     instrument/option/option.cpp
+    utils/gzip_json.cpp
 )
 
 # --------------------
@@ -26,7 +27,6 @@ add_executable(main
 target_include_directories(main
     PRIVATE
         ${CMAKE_SOURCE_DIR}
-        ${CMAKE_SOURCE_DIR}/external   # cppcodec
 )
 
 # --------------------
@@ -34,7 +34,6 @@ target_include_directories(main
 # --------------------
 find_package(ZLIB REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
-# find_package(Boost REQUIRED COMPONENTS iostreams)
 
 # --------------------
 # Link libraries
@@ -42,7 +41,6 @@ find_package(nlohmann_json CONFIG REQUIRED)
 target_link_libraries(main
     PRIVATE
         ZLIB::ZLIB
-        # Boost::iostreams
         nlohmann_json::nlohmann_json
 )
 
