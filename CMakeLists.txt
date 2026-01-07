@@ -13,6 +13,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # --------------------
 add_executable(main
     main.cpp
+    process/process.cpp
+    workflow/workflow.cpp
     filterclass/filterclass.cpp
     exchangetype/exchangetype.cpp
     instrument/equity/equity.cpp
