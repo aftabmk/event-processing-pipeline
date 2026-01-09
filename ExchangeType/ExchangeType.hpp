@@ -1,5 +1,7 @@
 #pragma once
 #include <string>
+#include <cstdlib>
+
 #include "../Enums/Enums.hpp"
 
 class ExchangeType {

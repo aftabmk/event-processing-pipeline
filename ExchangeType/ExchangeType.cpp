@@ -1,8 +1,8 @@
 #include "ExchangeType.hpp"
 
 Exchange ExchangeType::toExchange(const std::string& str) {
-    if (str == "NSE") return Exchange::EXCHANGE_1;
-    if (str == "BSE") return Exchange::EXCHANGE_2;
+    if (str == std::getenv("EXCHANGE_1")) return Exchange::EXCHANGE_1;
+    if (str == std::getenv("EXCHANGE_2")) return Exchange::EXCHANGE_2;
     return Exchange::UNKNOWN;
 }
 
