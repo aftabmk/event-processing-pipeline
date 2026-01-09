@@ -1,5 +1,6 @@
 #include "postJson.hpp"
 
+#include <iostream>
 #include <curl/curl.h>
 #include <cstdlib>
 #include <stdexcept>
@@ -30,6 +31,7 @@ void postJson(const json& payload) {
         throw std::runtime_error("Failed to init curl");
 
     std::string body = payload.dump();
+    std::cout<<"body"<<body<<'\n';
 
     struct curl_slist* headers = nullptr;
     std::string authHeader = "Authorization: Bearer " + KEY;
