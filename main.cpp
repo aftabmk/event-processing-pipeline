@@ -2,6 +2,8 @@
 #include <iostream>
 #include <memory>
 #include <stdexcept>
+#include <future>
+#include <vector>
 
 #include <nlohmann/json.hpp>
 #include "workflow/workflow.hpp"
@@ -20,22 +22,31 @@ int main() {
         if (!root.is_array())
             throw std::runtime_error("Expected top-level array");
 
-        auto workflow = std::make_unique<Workflow>();
+        auto workflow = std::make_shared<Workflow>();
+        std::vector<std::future<void>> futures;
 
-        // root -> array of objects
+        // Outer array
         for (const auto& wrapper : root) {
             if (!wrapper.contains("Records") || !wrapper["Records"].is_array())
-                continue; // skip malformed entries
+                continue;
 
-            // Records -> array (batching enabled)
+            // Records array
             for (const auto& record : wrapper["Records"]) {
-                try {
-                    workflow->execute(record);
-                }
-                catch (const std::exception& e) {
-                    // Do NOT kill the entire batch for one bad message
-                    std::cerr << "Error processing record: " << e.what() << "\n";
-                }
+                futures.emplace_back(
+                    std::async(std::launch::async, [workflow, record]() {
+                        workflow->execute(record);
+                    })
+                );
+            }
+        }
+
+        // Wait for all tasks + catch async exceptions
+        for (auto& f : futures) {
+            try {
+                f.get();
+            }
+            catch (const std::exception& e) {
+                std::cerr << "Async task failed: " << e.what() << "\n";
             }
         }
     }
