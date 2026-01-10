@@ -6,6 +6,8 @@
 #include <vector>
 
 #include <nlohmann/json.hpp>
+
+#include "macro/logger.hpp"
 #include "workflow/workflow.hpp"
 
 using json = nlohmann::json;
@@ -46,12 +48,12 @@ int main() {
                 future.get();
             }
             catch (const std::exception& e) {
-                std::cerr << "Async task failed: " << e.what() << "\n";
+                LOG_ERR(e.what());
             }
         }
     }
     catch (const std::exception& e) {
-        std::cerr << "Fatal error: " << e.what() << "\n";
+        LOG_ERR(e.what());
         return 1;
     }
 

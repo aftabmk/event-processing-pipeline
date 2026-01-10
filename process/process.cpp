@@ -8,7 +8,7 @@ json process(const json& record){
         // 1. SQS body (STRING)
         // ----------------------------
         if (!record.contains("body") || !record["body"].is_string()) {
-            std::cout<<"record missing body parameter"<<'\n';
+            LOG_ERR("record missing body parameter");
             return json::object();
         }
         
@@ -18,7 +18,7 @@ json process(const json& record){
         // 2. SNS Message (STRING)
         // ----------------------------
         if (!sqsBody.contains("Message") || !sqsBody["Message"].is_string()) {
-            std::cout<<"record missing Message parameter"<<'\n';
+            LOG_ERR("record missing Message parameter");
             return json::object();
         }
         
@@ -28,7 +28,7 @@ json process(const json& record){
         // ----------------------------
         if (!messageObj.contains("type") || messageObj["type"] != "Buffer" ||
         !messageObj.contains("data") || !messageObj["data"].is_array()){
-            std::cout<<"record missing type | data"<<'\n';
+            LOG_ERR("record missing type | data");
             return json::object();
         }
 
@@ -52,7 +52,7 @@ json process(const json& record){
         std::unique_ptr<Instrument> instrument = filter.getInstrument();
 
         if (!instrument) {
-            std::cout<<"Unable to find instrument"<<'\n';
+            LOG_ERR("Unable to find instrument");
             return json::object();
         }
         // ----------------------------
@@ -61,7 +61,7 @@ json process(const json& record){
         return instrument->process(decompressedJSON);
     }
     catch (const std::exception& e) {
-        std::cerr << "[process] Error: " << e.what() << "\n";
+        LOG_ERR(e.what());
         return json::object();
     }
 }

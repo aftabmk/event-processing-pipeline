@@ -102,26 +102,34 @@ int Option::toInt(const json& j, const char* key) {
 json Option::processOptionExchangeOne(const json& jsonData) {
     json result = json::array();
 
-    if (!jsonData.contains("data") || !jsonData["data"].is_array())
+    if (!jsonData.contains("data") || !jsonData["data"].is_array()) {
+        LOG_ERR("data val arg is missing");
         return result;
-
+    }
+    
     const std::string ts = jsonData.value("time", "");
-
+    
     for (const auto& block : jsonData["data"]) {
-
-        if (!block.contains("records")) continue;
+        
+        if (!block.contains("records")) {
+            LOG_ERR("record arg val is missing");
+            continue;
+        }
         const auto& records = block["records"];
-
-        if (!records.contains("data")) continue;
-
+        
+        if (!records.contains("data")) {
+            LOG_ERR("data arg val is missing");
+            continue;
+        }
+        
         double ulv = records.value("underlyingValue", 0.0);
         auto [low, high] = calculateBound(ulv, 50, 10);
-
+        
         for (const auto& row : records["data"]) {
             int strike = row.value("strikePrice", 0);
             if (strike < low || strike > high)
-                continue;
-
+            continue;
+            
             result.push_back(
                 buildOption(
                     strike,
@@ -135,38 +143,43 @@ json Option::processOptionExchangeOne(const json& jsonData) {
             );
         }
     }
-
+    
     return result;
 }
 
 // ---------- ExchangeTwo option chain ----------
 json Option::processOptionExchangeTwo(const json& jsonData) {
     json result = json::array();
-
-    if (!jsonData.contains("data") || !jsonData["data"].is_array())
+    
+    if (!jsonData.contains("data") || !jsonData["data"].is_array()) {
+        LOG_ERR("data val arg is missing");
         return result;
-
+    }
+    
     const std::string ts = jsonData.value("time", "");
-
+    
     for (const auto& block : jsonData["data"]) {
-
-        if (!block.contains("Table")) continue;
+        
+        if (!block.contains("Table")) {
+            LOG_ERR("Table val arg is missing");
+            continue;
+        }
         const auto& table = block["Table"];
-
+        
         double ulv = 0.0;
         for (const auto& r : table) {
             ulv = toDouble(r, "UlaValue");
             if (ulv > 0) break;
         }
         if (ulv == 0) continue;
-
+        
         auto [low, high] = calculateBound(ulv, 100, 10);
-
+        
         for (const auto& row : table) {
             int strike = toInt(row, "Strike_Price");
             if (strike < low || strike > high)
-                continue;
-
+            continue;
+            
             result.push_back(
                 buildOption(
                     strike,

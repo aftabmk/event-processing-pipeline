@@ -3,7 +3,7 @@
 #include <cstdlib>
 
 #include "../Enums/Enums.hpp"
-
+#include "../namespace/data.hpp"
 class ExchangeType {
 public:
     static Type toType(const std::string& s);

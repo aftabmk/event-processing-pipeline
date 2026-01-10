@@ -1,15 +1,5 @@
 #include "postJson.hpp"
 
-#include <iostream>
-#include <curl/curl.h>
-#include <cstdlib>
-#include <stdexcept>
-#include <string>
-
-#include <nlohmann/json.hpp>
-
-using json = nlohmann::json;
-
 static std::pair<std::string, std::string> getEnv() {
     const char* url = std::getenv("URL");
     if (!url || !*url)

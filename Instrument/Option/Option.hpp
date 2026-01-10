@@ -5,6 +5,7 @@
 #include <iostream>
 #include <nlohmann/json.hpp>
 
+#include "macro/logger.hpp"
 #include "../Instrument.hpp"
 
 using json = nlohmann::json;

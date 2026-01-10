@@ -5,6 +5,7 @@
 #include <iostream>
 #include <nlohmann/json.hpp>
 
+#include "macro/logger.hpp"
 #include "utils/gzip_json.hpp"
 #include "instrument/instrument.hpp"
 #include "filterclass/filterclass.hpp"

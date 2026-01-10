@@ -1,8 +1,5 @@
 #include "workflow.hpp"
 
-#define logJson(json) std::cout<<"json\n"<<data.dump(4)<<'\n'
-
-
 void Workflow::execute(const json& record) const
 {
     try {
@@ -10,6 +7,6 @@ void Workflow::execute(const json& record) const
         postJson(data);
     }
     catch (const std::exception& e) {
-        std::cerr << "Error processing record: " << e.what() << "\n";
+        LOG_ERR(e.what());
     }
 }

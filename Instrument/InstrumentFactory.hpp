@@ -1,9 +1,11 @@
 #pragma once
+
 #include <memory>
-#include "../Enums/Enums.hpp"
+
 #include "Equity/Equity.hpp"
 #include "Future/Future.hpp"
 #include "Option/Option.hpp"
+#include "../Enums/Enums.hpp"
 
 class InstrumentFactory {
 public:

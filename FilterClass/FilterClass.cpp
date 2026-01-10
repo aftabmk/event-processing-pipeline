@@ -16,6 +16,7 @@ std::pair<Exchange, Type> FilterClass::parseJson(const json& Json) {
         };
     }
     catch (...) {
+        LOG_ERR("EXHANGE and TYPE didn't match");
         return { Exchange::UNKNOWN, Type::UNKNOWN };
     }
 }
