@@ -14,7 +14,7 @@ using json = nlohmann::json;
 
 json process(const json& record){
     try {
-        std::cout<<record.dump()<<'\n';
+        // std::cout<<record.dump()<<'\n';
         // ----------------------------
         // 1. SQS body (STRING)
         // ----------------------------
@@ -59,15 +59,16 @@ json process(const json& record){
         // 5. Decompress gzip → JSON
         // ----------------------------
         json decompressedJSON = readGzippedJson(zipArray);
-        std::cout<<"decompressedJSON"<<decompressedJSON.dump(4)<<'\n';
         // ----------------------------
         // 6. Filter → Instrument
         // ----------------------------
         FilterClass filter(decompressedJSON.dump());
         std::unique_ptr<Instrument> instrument = filter.getInstrument();
 
-        if (!instrument)
+        if (!instrument) {
+            std::cout<<"Unable to find instrument"<<'\n';
             return json::object();
+        }
 
         // instrument->log();
 
