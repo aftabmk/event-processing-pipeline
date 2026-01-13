@@ -5,7 +5,7 @@
 #include <vector>
 #include <stdexcept>
 
-#include <nlohmann/json.hpp>
+#include "nlohmann/json.hpp"
 
 #include "macro/logger.hpp"
 #include "workflow/workflow.hpp"

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <nlohmann/json.hpp>
+#include "nlohmann/json.hpp"
 
 #include "processworkflow.hpp"
 #include "macro/logger.hpp"

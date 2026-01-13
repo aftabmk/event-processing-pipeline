@@ -6,9 +6,9 @@
 #include <stdexcept>
 
 #include <curl/curl.h>
-#include <nlohmann/json.hpp>
 
 #include "../macro/logger.hpp"
+#include "../nlohmann/json.hpp"
 #include "../namespace/env.hpp"
 
 using json = nlohmann::json;

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <iostream>
-#include <nlohmann/json.hpp>
 
 #include "../Instrument.hpp"
 #include "../../macro/logger.hpp"

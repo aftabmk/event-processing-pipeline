@@ -8,7 +8,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # ---- Dependencies ----
 find_package(ZLIB REQUIRED)
 find_package(CURL REQUIRED)
-find_package(nlohmann_json CONFIG REQUIRED)
+# find_package(nlohmann_json CONFIG REQUIRED)
+
 
 # ---- Submodules ----
 add_subdirectory(utils)
@@ -32,7 +33,7 @@ target_link_libraries(main
         filterclass
         exchangetype
         instrument
-        nlohmann_json::nlohmann_json
+        # nlohmann_json::nlohmann_json
 )
 
 target_compile_definitions(main PRIVATE HAVE_ZLIB)

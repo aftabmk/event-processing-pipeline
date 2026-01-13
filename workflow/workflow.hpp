@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iostream>
-#include <nlohmann/json.hpp>
+#include "../nlohmann/json.hpp"
 
 #include "../macro/logger.hpp"
 #include "../process/process.hpp"

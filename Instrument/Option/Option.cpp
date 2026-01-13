@@ -1,4 +1,4 @@
-#include "option.hpp"
+#include "Option.hpp"
 
 json Option::process(const json& jsonData) {
     switch (exchange) {

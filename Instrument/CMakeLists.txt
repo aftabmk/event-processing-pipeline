@@ -1,7 +1,7 @@
 add_library(instrument STATIC
-    equity/equity.cpp
-    future/future.cpp
-    option/option.cpp
+    Equity/Equity.cpp
+    Future/Future.cpp
+    Option/Option.cpp
 )
 
 target_include_directories(instrument

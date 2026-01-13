@@ -4,9 +4,9 @@
 #include <zlib.h>
 #include <sstream>
 #include <stdexcept>
-#include <nlohmann/json.hpp>
 
 #include "../macro/logger.hpp" 
+#include "../nlohmann/json.hpp"
 
 
 using json = nlohmann::json;

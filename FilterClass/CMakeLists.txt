@@ -1,5 +1,5 @@
 add_library(filterclass STATIC
-    filterclass.cpp
+    FilterClass.cpp
 )
 
 target_include_directories(filterclass

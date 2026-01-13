@@ -1,18 +1,25 @@
 #pragma once
 
-#include <fstream>
 #include <string>
+#include <fstream>
+#include <stdexcept>
 
-#include <nlohmann/json.hpp>
+#include "nlohmann/json.hpp"
 
-#include "processworkflow.hpp"
 #include "macro/logger.hpp"
+#include "processworkflow.hpp"
 
 inline int local() {
     try {
-        std::ifstream in("../data.json");
-        if (!in)
-            RUNTIME_ERROR("Failed to open ../data.json");
+        std::ifstream in;
+        in.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+
+        try {
+            in.open("../data.json");
+        } 
+        catch (const std::ios_base::failure& e) {
+            RUNTIME_ERROR(e.what());
+        }
 
         json root;
         in >> root;

@@ -1,40 +1,36 @@
-# ---- Stage 1: Build ----
+# ---- Builder ----
 FROM alpine:edge AS builder
 
-# Install build tools and dependencies
 RUN apk add --no-cache \
     build-base \
     cmake \
     zlib-dev \
     curl-dev
 
-# Set working directory
 WORKDIR /app
-
-# Copy all source files
 COPY . .
 
-# Create build directory
-RUN mkdir build
+RUN mkdir -p build
 WORKDIR /app/build
 
-# Configure CMake and build the project
 RUN cmake .. -DCMAKE_BUILD_TYPE=Release \
     && cmake --build . -- -j$(nproc)
 
-# ---- Stage 2: Runtime ----
-FROM alpine:edge AS runtime
+# ---- Runtime ----
+FROM alpine:edge
 
-# Install only runtime dependencies
+# REQUIRED for C++ binaries
 RUN apk add --no-cache \
+    libstdc++ \
+    libgcc \
     zlib \
     curl
 
-# Set working directory
 WORKDIR /app
 
-# Copy the executable from the builder stage
-COPY --from=builder /app/build/main .
+# Copy runtime assets
+COPY data.json /app/data.json
+COPY --from=builder /app/build/main /app/bin/main
 
-# Make executable entrypoint
+WORKDIR /app/bin
 ENTRYPOINT ["./main"]

@@ -1,4 +1,4 @@
-#include "equity.hpp"
+#include "Equity.hpp"
 
 json Equity::process(const json& jsonData) {
     

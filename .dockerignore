@@ -1,6 +1,7 @@
+.env
+
 test/
 build/
 .vscode/
-.env
 
 data_output.json
