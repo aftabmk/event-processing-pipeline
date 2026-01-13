@@ -4,10 +4,10 @@ json Equity::process(const json& jsonData) {
     
     switch (exchange) {
         case Exchange::EXCHANGE_1:
-            return processEquityExchangeOne(jsonData,DATA::EXCHANGE_1);
+            return processEquityExchangeOne(jsonData,ENV::EXCHANGE_1);
 
         case Exchange::EXCHANGE_2:
-            return processEquityExchangeTwo(jsonData,DATA::EXCHANGE_2);
+            return processEquityExchangeTwo(jsonData,ENV::EXCHANGE_2);
 
         default:
             return json{};

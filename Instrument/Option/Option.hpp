@@ -7,6 +7,7 @@
 
 #include "../Instrument.hpp"
 #include "../../macro/logger.hpp"
+#include "../../namespace/env.hpp"
 #include "../../namespace/data.hpp"
 #include "../../namespace/option.hpp"
 

@@ -1,6 +1,8 @@
 #include "environment/local.hpp"
 
-int main()
-{
-    return local();
+int main() {
+    // only runs local workflow
+    return local(); 
 }
+
+

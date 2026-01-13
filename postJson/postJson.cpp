@@ -1,7 +1,7 @@
 #include "postJson.hpp"
 
 static std::pair<std::string, std::string> getEnv() {
-    const char* url = DATA::URL, *key = DATA::KEY;
+    const char* url = ENV::URL, *key = ENV::KEY;
 
     if (!url)
         RUNTIME_ERROR("URL env var not set");

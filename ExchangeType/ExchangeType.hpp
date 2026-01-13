@@ -4,6 +4,7 @@
 
 #include "../Enums/Enums.hpp"
 #include "../macro/logger.hpp"
+#include "../namespace/env.hpp"
 #include "../namespace/data.hpp"
 
 class ExchangeType {

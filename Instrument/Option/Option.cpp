@@ -3,10 +3,10 @@
 json Option::process(const json& jsonData) {
     switch (exchange) {
         case Exchange::EXCHANGE_1:
-            return processOptionExchangeOne(jsonData,DATA::EXCHANGE_1);
+            return processOptionExchangeOne(jsonData,ENV::EXCHANGE_1);
 
         case Exchange::EXCHANGE_2:
-            return processOptionExchangeTwo(jsonData,DATA::EXCHANGE_2);
+            return processOptionExchangeTwo(jsonData,ENV::EXCHANGE_2);
 
         default:
             return json{};
