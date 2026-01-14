@@ -12,6 +12,7 @@
 inline int local() {
     try {
         std::ifstream in;
+        // file not fount or io error detection while stream
         in.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 
         try {
@@ -33,3 +34,4 @@ inline int local() {
 
     return 0;
 }
+

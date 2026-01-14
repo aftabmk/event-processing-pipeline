@@ -1,0 +1,4 @@
+1) login (powershell only) : aws ecr get-login-password --region [region] docker login --username AWS --password-stdin [ecr_url]
+2) build docker image      : docker build -t [image]
+3) tag docker image        : docker tag [image] : latest [ecr_url]
+4) push image to ecr       : docker push [ecr_url] : latest
