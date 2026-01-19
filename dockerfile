@@ -28,9 +28,11 @@ RUN apk add --no-cache \
 
 WORKDIR /app
 
-# Copy runtime assets
-COPY data.json /app/data.json
+# Copy compiled binary
 COPY --from=builder /app/build/main /app/bin/main
 
-WORKDIR /app/bin
-ENTRYPOINT ["./main"]
+# Copy lambda environment wrapper
+COPY environment /app/environment
+
+# IMPORTANT: Lambda entrypoint
+ENTRYPOINT ["./environment/lambda"]
