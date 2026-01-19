@@ -8,7 +8,7 @@
 #include "../nlohmann/json.hpp"
 #include "../Enums/Enums.hpp"
 #include "../macro/logger.hpp"
-#include "../instrument/InstrumentFactory.hpp"
+#include "../Instrument/InstrumentFactory.hpp"
 
 using json = nlohmann::json;
 
