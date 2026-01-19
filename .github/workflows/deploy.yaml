@@ -30,7 +30,7 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
 
-    # ---------- LOGIN TO ECR -----------
+    # ---------- LOGIN TO ECR ----------
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v2
@@ -39,13 +39,28 @@ jobs:
     - name: Build, tag, and push image to ECR
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        IMAGE_TAG: ${{ github.sha }}
+        IMAGE_SHA: ${{ github.sha }}
       run: |
         set -eux
+
+        IMAGE_SHA_TAG=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_SHA
+        IMAGE_LATEST_TAG=$ECR_REGISTRY/$ECR_REPOSITORY:latest
+
+        echo "Building image:"
+        echo " - $IMAGE_SHA_TAG"
+        echo " - $IMAGE_LATEST_TAG"
+
+        # Build once, tag twice
         docker build --progress=plain \
-          -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        echo "IMAGE_URI=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
+          -t $IMAGE_SHA_TAG \
+          -t $IMAGE_LATEST_TAG .
+
+        # Push both tags
+        docker push $IMAGE_SHA_TAG
+        docker push $IMAGE_LATEST_TAG
+
+        # ECS will deploy the immutable SHA tag
+        echo "IMAGE_URI=$IMAGE_SHA_TAG" >> $GITHUB_ENV
 
     # ---------- FETCH TASK DEFINITION ----------
     - name: Download ECS task definition
