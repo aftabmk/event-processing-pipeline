@@ -7,8 +7,8 @@
 
 #include "../macro/logger.hpp"
 #include "../utils/gzip_json.hpp"
-#include "../instrument/Instrument.hpp"
-#include "../filterclass/FilterClass.hpp"
+#include "../Instrument/Instrument.hpp"
+#include "../FilterClass/FilterClass.hpp"
 
 using json = nlohmann::json;
 
