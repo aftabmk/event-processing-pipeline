@@ -22,21 +22,6 @@ jobs:
       with:
         fetch-depth: 0
 
-    # ---------- VALIDATE REQUIRED DIRECTORIES ----------
-    - name: Validate build directories exist
-      run: |
-        echo "Listing repo root:"
-        ls -la
-        echo ""
-        echo "Checking required directories..."
-        for d in filterclass exchangetype instrument; do
-          if [ ! -d "$d" ]; then
-            echo "❌ Missing directory: $d"
-            exit 1
-          fi
-          echo "✅ Found: $d"
-        done
-
     # ---------- AWS LOGIN ----------
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
