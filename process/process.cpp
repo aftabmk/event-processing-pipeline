@@ -19,21 +19,32 @@ json process(const json& record){
         }
         
         json messages = json::parse(sqsBody["Message"].get<std::string>());
+        // LOG_JSON(messages);
         // Validate Buffer payload
-        if (!messages.contains("type") || messages["type"] != "Buffer" || !messages.contains("data") || !messages["data"].is_array()){
+        if (
+            !messages.contains("type") || 
+            messages["type"] != "base64" || 
+            !messages.contains("data")  /* || 
+            !messages["data"].is_array() */ ){
             RUNTIME_ERROR("record missing type | data");
             return json::object();
         }
 
         // Extract gzip buffer
-        std::vector<unsigned char> zipArray;
-        zipArray.reserve(messages["data"].size());
-
-        for (const auto& message : messages["data"])
-            zipArray.push_back(message.get<unsigned char>());
-
+        
+        // Decode Base64 → byte array
         // Decompress gzip → JSON
-        json decompressedJSON = readGzippedJson(zipArray);
+        json decompressedJSON = GzipJson::parse(messages.dump());
+
+
+        // std::vector<unsigned char> zipArray;
+        // zipArray.reserve(messages["data"].size());
+
+        // for (const auto& message : messages["data"])
+        //     zipArray.push_back(message.get<unsigned char>());
+
+        // // Decompress gzip → JSON
+        // json decompressedJSON = readGzippedJson(zipArray);
 
         // Filter → Instrument
         FilterClass filter(decompressedJSON);

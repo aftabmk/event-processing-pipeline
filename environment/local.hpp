@@ -9,23 +9,29 @@
 #include "macro/logger.hpp"
 #include "processworkflow.hpp"
 
-inline int local() {
+inline int run_local() {
     try {
-        std::ifstream in;
-        // file not fount or io error detection while stream
-        in.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+        std::ifstream in("../data.json");
+        // std::ifstream in("data.json");
 
-        try {
-            in.open("../data.json");
-        } 
-        catch (const std::ios_base::failure& e) {
-            RUNTIME_ERROR(e.what());
+        if (!in)
+        {
+            throw std::runtime_error("Failed to open data.json");
         }
 
-        json root;
-        in >> root;
+        std::cout << "File opened successfully\n";
 
-        processWorkFlow(root);
+        json root;
+
+        try {
+            in >> root;   // isolate this
+        }
+        catch (const std::exception& e) {
+            std::cerr << "JSON parse/read failed: " << e.what() << std::endl;
+            throw;
+        }
+        // only get first object instead of whole array
+        processWorkFlow(root[0]);
     }
     catch (const std::exception& e) {
         LOG_ERR(e.what());
@@ -34,4 +40,3 @@ inline int local() {
 
     return 0;
 }
-

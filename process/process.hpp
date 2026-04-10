@@ -10,6 +10,8 @@
 #include "../Instrument/Instrument.hpp"
 #include "../FilterClass/FilterClass.hpp"
 
+#include "../gzip/GzipJson.hpp"
+
 using json = nlohmann::json;
 
 /**

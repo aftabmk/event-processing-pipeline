@@ -13,6 +13,7 @@
 using json = nlohmann::json;
 
 inline void processWorkFlow(const json& root) {
+
     // Expect object instead of array
     if (!root.is_object())
         RUNTIME_ERROR("Expected top-level object");

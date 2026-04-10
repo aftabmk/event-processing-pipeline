@@ -23,6 +23,10 @@ void postJson(const json& payload) {
     struct curl_slist* headers = nullptr;
     
     std::string body = payload.dump();
+    
+    // log payload
+    std::cout<<body<<'\n';
+
     std::string authHeader = "Authorization: Bearer " + KEY;
 
     headers = curl_slist_append(headers, "Content-Type: application/json");

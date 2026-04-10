@@ -33,3 +33,4 @@ json readGzippedJson(const std::vector<unsigned char>& data) {
 
     return json::parse(decompressed.str());
 }
+

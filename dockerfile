@@ -56,6 +56,9 @@ WORKDIR /app
 
 # Copy compiled Lambda binary
 COPY --from=builder /app/build/main /app/main
+# for local data.json file
+COPY --from=builder /app/data.json /app/data.json
+
 RUN chmod +x /app/main
 
 # Lambda ENTRYPOINT

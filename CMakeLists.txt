@@ -17,6 +17,7 @@ include_directories(
 link_directories(/usr/local/lib)
 
 # ---------------- Submodules ----------------
+add_subdirectory(gzip)
 add_subdirectory(utils)
 add_subdirectory(process)
 add_subdirectory(postJson)
@@ -33,13 +34,13 @@ target_link_libraries(main
         workflow
         process
         utils
+        gzip
         postJson
         filterclass
         exchangetype
         instrument
-
         # AWS Lambda Runtime
-        aws-lambda-runtime
+        # aws-lambda-runtime
 
         # System libraries
         ${CURL_LIBRARIES}
