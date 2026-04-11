@@ -40,7 +40,7 @@ target_link_libraries(main
         exchangetype
         instrument
         # AWS Lambda Runtime
-        aws-lambda-runtime
+        # aws-lambda-runtime
 
         # System libraries
         ${CURL_LIBRARIES}
