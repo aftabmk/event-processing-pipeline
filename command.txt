@@ -1,6 +1,6 @@
 # half ecr_url = upto amazon.com
-1) login (powershell only) : aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin [half ecr_url]
-2) build docker image      : docker build -t [image] .(. should be ommited)
-2) build docker image      : docker build --no-cache -t [image].(. should be ommited)
-3) tag docker image        : docker tag [image] : latest [full ecr_url]
-4) push image to ecr       : docker push [full ecr_url] : latest
+1) login (powershell only)    : aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin [base ecr_url]
+2) build docker image         : docker build -t [image] .(. should't be ommited)
+2) build docker image (fresh) : docker build --no-cache -t [image].(. should't be ommited)
+3) tag docker image           : docker tag [image] : latest [full ecr_url]
+4) push image to ecr          : docker push [full ecr_url] : latest
