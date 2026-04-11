@@ -21,17 +21,18 @@ inline int run_local() {
 
         std::cout << "File opened successfully\n";
 
-        json root;
-
+        json roots;
         try {
-            in >> root;   // isolate this
+            in >> roots;   // isolate this
         }
         catch (const std::exception& e) {
             std::cerr << "JSON parse/read failed: " << e.what() << std::endl;
             throw;
         }
         // only get first object instead of whole array
-        processWorkFlow(root[0]);
+        for(auto& root : roots){
+            processWorkFlow(root);
+        }
     }
     catch (const std::exception& e) {
         LOG_ERR(e.what());

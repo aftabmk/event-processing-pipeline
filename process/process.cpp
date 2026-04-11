@@ -34,7 +34,8 @@ json process(const json& record){
         
         // Decode Base64 → byte array
         // Decompress gzip → JSON
-        json decompressedJSON = GzipJson::parse(messages["data"]);
+        std::string data = std::string(messages["data"]);
+        json decompressedJSON = GzipJson::parse(data);
 
 
         // std::vector<unsigned char> zipArray;

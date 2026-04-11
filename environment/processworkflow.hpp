@@ -26,6 +26,8 @@ inline void processWorkFlow(const json& root) {
 
     // Directly iterate Records array
     for (const auto& record : root["Records"]) {
+        std::string str = record.dump(2);
+
         futures.emplace_back(
             std::async(std::launch::async, [workflow, record]() {
                 workflow->execute(record);
