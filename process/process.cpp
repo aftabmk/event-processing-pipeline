@@ -18,24 +18,24 @@ json process(const json& record){
             return json::object();
         }
         
-        json messages = json::parse(sqsBody["Message"].get<std::string>());
-        // LOG_JSON(messages);
+        std::string message = sqsBody["Message"];
         // Validate Buffer payload
-        if (
-            !messages.contains("type") || 
-            messages["type"] != "base64" || 
-            !messages.contains("data")  /* || 
-            !messages["data"].is_array() */ ){
-            RUNTIME_ERROR("record missing type | data");
-            return json::object();
-        }
+        // if (
+        //     !messages.contains("type") || 
+        //     messages["type"] != "base64" || 
+        //     !messages.contains("data")  /* || 
+        //     !messages["data"].is_array() */ ){
+        //     RUNTIME_ERROR("record missing type | data");
+        //     return json::object();
+        // }
 
         // Extract gzip buffer
         
         // Decode Base64 → byte array
         // Decompress gzip → JSON
-        std::string data = std::string(messages["data"]);
-        json decompressedJSON = GzipJson::parse(data);
+        // std::string data = std::string(messages["data"]);
+
+        json decompressedJSON = GzipJson::parse(message);
 
 
         // std::vector<unsigned char> zipArray;

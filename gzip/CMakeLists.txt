@@ -1,5 +1,5 @@
-add_library(gzip
-    GZipJson.cpp
+add_library(gzip STATIC
+    GzipJson.cpp
 )
 
 target_include_directories(gzip

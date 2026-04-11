@@ -13,7 +13,6 @@
 using json = nlohmann::json;
 
 inline void processWorkFlow(const json& root) {
-
     // Expect object instead of array
     if (!root.is_object())
         RUNTIME_ERROR("Expected top-level object");
@@ -26,7 +25,7 @@ inline void processWorkFlow(const json& root) {
 
     // Directly iterate Records array
     for (const auto& record : root["Records"]) {
-        std::string str = record.dump(2);
+        // LOG_JSON(record);
 
         futures.emplace_back(
             std::async(std::launch::async, [workflow, record]() {
