@@ -1,13 +1,13 @@
 #include "namespace/env.hpp"
 #include "environment/local.hpp"
-// #include "environment/lambda.hpp"
+#include "environment/lambda.hpp"
 
 int main()
 {
     switch (ENV::ISLAMBDA != nullptr)
     {
         case true:
-            // run_lambda();
+            run_lambda();
             break;
 
         case false:
