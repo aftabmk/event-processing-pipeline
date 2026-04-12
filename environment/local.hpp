@@ -11,7 +11,7 @@
 
 inline int run_local() {
     try {
-        std::ifstream in("data.json");
+        std::ifstream in("../data.json");
         // std::ifstream in("data.json");
 
         if (!in)
