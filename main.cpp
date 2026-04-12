@@ -1,3 +1,4 @@
+// // local
 // #include "namespace/env.hpp"
 // #include "environment/local.hpp"
 // // #include "environment/lambda.hpp"
@@ -9,14 +10,7 @@
 // {
 //     try
 //     {
-//         if (false)
-//         {
-//             // run_lambda();
-//         }
-//         else
-//         {
-//             run_local();
-//         }
+//         run_local();
 //     }
 //     catch (const std::exception& e)
 //     {
@@ -30,9 +24,9 @@
 //     return 0;
 // }
 
-#include <aws/lambda-runtime/runtime.h>
-
+// aws lambda 
 #include "environment/lambda.hpp"
+#include <aws/lambda-runtime/runtime.h>
 
 int main()
 {
